@@ -21,9 +21,17 @@ export default {
       display: false
     }
   },
+  mounted () {
+    this.processParameters();
+  },
+  watch: {
+    $route() {
+      this.processParameters();
+    }
+  },
   methods: {
     save () {
-      const { date, category, price } = this
+      const { date, category, price } = this;
       const pays = this.getPaymentsList();
       this.setPaymentsListData([{ date, category, price }, ...pays]);
       this.date = this.category = '';
@@ -31,6 +39,18 @@ export default {
     },
     addcost () {
       this.display = !this.display
+    },
+    processParameters() {
+      if (this.$route.params.category && this.$route.query.value) {
+        const p = { date: (new Date()).toLocaleDateString(), category: this.$route.params.category, price: this.$route.query.value };
+        const pays = this.getPaymentsList();
+        this.setPaymentsListData([p, ...pays]);
+      } else {
+        this.display = true;
+        this.date = (new Date()).toLocaleDateString();
+        this.category = this.$route.params.category || '';
+        this.price = this.$route.query.value || 0;
+      }
     },
     ...mapMutations([
       'setPaymentsListData'
