@@ -11,6 +11,7 @@
 </template>
 
 <script>
+import { mapGetters, mapMutations } from 'vuex'
 export default {
   data () {
     return {
@@ -20,18 +21,23 @@ export default {
       display: false
     }
   },
-  props: {
-    items: Array
-  },
   methods: {
     save () {
       const { date, category, price } = this
-      this.$emit('add', { date, category, price })
+      const pays = this.getPaymentsList();
+      this.setPaymentsListData([{ date, category, price }, ...pays]);
+      this.date = this.category = '';
+      this.price = 0;
     },
     addcost () {
       this.display = !this.display
-    }
-
+    },
+    ...mapMutations([
+      'setPaymentsListData'
+    ]),
+    ...mapGetters([
+      'getPaymentsList'
+    ])
   }
 }
 </script>

@@ -7,24 +7,47 @@
         <th>Category</th>
         <th>Value</th>
       </tr>
-      <tr v-for="(item, index) in items" :key="index">
-        <td>{{ index }}</td>
+      <tr v-for="(item, index) in currentElements" :key="index">
+        <td>{{ index + 1 + (page - 1)*n}}</td>
         <td>{{ item.date }}</td>
         <td>{{ item.category }}</td>
         <td>{{ item.price }}</td>
       </tr>
     </table>
+    <Pagination
+      :length="getPaymentsList.length"
+      :n="n"
+      :cur="page"
+      @paginate="onPaginate"
+    />
   </div>
 </template>
 
 <script>
+import Pagination from './Pagination'
+import { mapGetters } from 'vuex'
 export default {
-  props: {
-    items: Array
+  components: {
+    Pagination
+  },
+  data () {
+    return {
+      page: 1,
+      n: 10
+    }
   },
   methods: {
-    doSomething () {
-      console.log(this.items)
+    onPaginate (p) {
+      this.page = p
+    }
+  },
+  computed: {
+    ...mapGetters([
+      'getPaymentsList'
+    ]),
+    currentElements () {
+      const { n, page } = this
+      return this.getPaymentsList.slice(n * (page - 1), n * page)
     }
   }
 }
