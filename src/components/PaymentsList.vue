@@ -8,10 +8,10 @@
         <th>Value</th>
       </tr>
       <tr v-for="(item, index) in currentElements" :key="index">
-        <td>{{ index + 1 + (page - 1)*n}}</td>
+        <td>{{ item.id }}</td>
         <td>{{ item.date }}</td>
         <td>{{ item.category }}</td>
-        <td>{{ item.price }}</td>
+        <td>{{ item.price }}</td> <div class="test" @click="onContexMenuClick($event, item.id)"></div>
       </tr>
     </table>
     <Pagination
@@ -25,7 +25,7 @@
 
 <script>
 import Pagination from './Pagination'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 export default {
   components: {
     Pagination
@@ -37,8 +37,19 @@ export default {
     }
   },
   methods: {
+    ...mapMutations([
+      'deleteItem',
+      'editItem'
+    ]),
     onPaginate (p) {
       this.page = p
+    },
+    onContexMenuClick (event, id) {
+      const items = [
+        { text: 'Delete', action: () => { this.deleteItem(id) }, icon: 'trash-alt' },
+        { text: 'Edit', action: () => { this.editItem(id) }, icon: 'pencil-alt' }
+      ]
+      this.$context.show({ event, items })
     }
   },
   computed: {
@@ -70,6 +81,15 @@ export default {
   }
   .table td:nth-child(1), .table th:nth-child(1) {
     padding-left:15px;
+  }
+  .test:after {
+  content: '\2807';
+  font-size: 28px;
+  color: rgb(184, 184, 184);
+  }
+  .test:hover:after {
+    color: rgb(71, 71, 71);
+    cursor: pointer;
   }
 
 </style>
