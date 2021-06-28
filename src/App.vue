@@ -4,52 +4,42 @@
       My personal costs
     </header>
     <main>
-      <PaymentForm @add="onDataAdded" />
-      <PaymentsList :items="paymentsList" />
+      <div v-if="false">
+        <router-link :class="[$style.wrp]" to="/add/payment/Food?value=200">/add/payment/Food?value=200</router-link>
+        <router-link :class="[$style.wrp]" to="/add/payment/Transport?value=50">/add/payment/Transport?value=50</router-link>
+        <router-link :class="[$style.wrp]" to="/add/payment/Entertainment?value=2000">/add/payment/Entertainment?value=2000</router-link>
+        <router-link :class="[$style.wrp]" to="/add/payment/Entertainment">/add/payment/Entertainment</router-link>
+        <router-link :class="[$style.wrp]" to="/add/payment/?value=2000">/add/payment/?value=2000</router-link>
+      </div>
+      <router-view></router-view>
     </main>
+    <ContextMenu />
   </div>
 </template>
 
 <script>
-import PaymentsList from './components/PaymentsList'
-import PaymentForm from './components/PaymentForm'
+import { mapActions } from 'vuex'
+import ContextMenu from './components/ContextMenu.vue'
 
 export default {
   name: 'App',
   components: {
-    PaymentsList,
-    PaymentForm
+    ContextMenu
   },
   data () {
     return {
-      paymentsList: [
-        {
-          date: '13.05.2021',
-          category: 'Education',
-          price: 123
-        },
-        {
-          date: '12.05.2021',
-          category: 'Education',
-          price: 456
-        },
-        {
-          date: '11.05.2021',
-          category: 'Education',
-          price: 789
-        },
-        {
-          date: '10.05.2021',
-          category: 'Education',
-          price: 0
-        }
-      ]
     }
+  },
+  mounted () {
+    this.fetchListData();
   },
   methods: {
     onDataAdded (data) {
       this.paymentsList.push(data)
-    }
+    },
+    ...mapActions({
+      fetchListData: 'fetchData'
+    })
   }
 }
 </script>
@@ -58,5 +48,17 @@ export default {
 .header {
   color: rgb(61, 61, 61);
   font-size: 50px;
+}
+.wrp {
+  display: flex;
+
+  & {
+    padding: 10px;
+    cursor: pointer;
+
+    &:hover {
+      color: rgb(86, 197, 192);
+    }
+  }
 }
 </style>
