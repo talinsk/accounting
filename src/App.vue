@@ -4,29 +4,26 @@
       My personal costs
     </header>
     <main>
-      <PaymentForm />
-      <PaymentsList />
+      <router-link :class="[$style.wrp]" to="/add/payment/Food?value=200">/add/payment/Food?value=200</router-link>
+      <router-link :class="[$style.wrp]" to="/add/payment/Transport?value=50">/add/payment/Transport?value=50</router-link>
+      <router-link :class="[$style.wrp]" to="/add/payment/Entertainment?value=2000">/add/payment/Entertainment?value=2000</router-link>
+      <router-link :class="[$style.wrp]" to="/add/payment/Entertainment">/add/payment/Entertainment</router-link>
+      <router-link :class="[$style.wrp]" to="/add/payment/?value=2000">/add/payment/?value=2000</router-link>
+      <router-view></router-view>
     </main>
   </div>
 </template>
 
 <script>
-import PaymentsList from './components/PaymentsList'
-import PaymentForm from './components/PaymentForm'
 import { mapActions } from 'vuex'
 
 export default {
   name: 'App',
-  components: {
-    PaymentsList,
-    PaymentForm
-  },
   data () {
     return {
     }
   },
   mounted () {
-    console.log('miunted');
     this.fetchListData();
   },
   methods: {
@@ -44,5 +41,17 @@ export default {
 .header {
   color: rgb(61, 61, 61);
   font-size: 50px;
+}
+.wrp {
+  display: flex;
+
+  & {
+    padding: 10px;
+    cursor: pointer;
+
+    &:hover {
+      color: rgb(86, 197, 192);
+    }
+  }
 }
 </style>
