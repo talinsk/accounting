@@ -1,8 +1,18 @@
 <template>
   <div id="app">
+    <v-app-bar flat>
+      <v-btn :ripple="false" plain to="/">Dashboard</v-btn>
+      <v-btn :ripple="false" plain to="/about">About</v-btn>
+    </v-app-bar>
+
     <header :class="[$style.header]">
       My personal costs
     </header>
+
+    <v-main>
+      <router-view></router-view>
+    </v-main>
+
     <main>
       <div v-if="false">
         <router-link :class="[$style.wrp]" to="/add/payment/Food?value=200">/add/payment/Food?value=200</router-link>
@@ -11,7 +21,6 @@
         <router-link :class="[$style.wrp]" to="/add/payment/Entertainment">/add/payment/Entertainment</router-link>
         <router-link :class="[$style.wrp]" to="/add/payment/?value=2000">/add/payment/?value=2000</router-link>
       </div>
-      <router-view></router-view>
     </main>
     <ContextMenu />
   </div>

@@ -3,6 +3,8 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
+const categories = ['Education', 'Travel', 'Food'];
+
 export default new Vuex.Store({
   state: {
     paymentsList: [],
@@ -49,7 +51,7 @@ export default new Vuex.Store({
             items.push({
               id: i,
               date: '13.05.2021',
-              category: 'Education',
+              category: categories[Math.floor(Math.random() * 3)], // 'Education',
               price: Math.floor(Math.random() * 100)
             })
           }
