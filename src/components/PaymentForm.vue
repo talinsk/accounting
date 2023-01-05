@@ -18,7 +18,8 @@ export default {
       date: '',
       category: '',
       price: 0,
-      display: false
+      display: false,
+      id: 0
     }
   },
   mounted () {
@@ -27,25 +28,48 @@ export default {
   watch: {
     $route() {
       this.processParameters();
+    },
+    getEditItemId(newItemId, oldItemId) {
+      const item = this.getPaymentsList().find(i => i.id === newItemId);
+      if (!item) {
+        return;
+      }
+      
+      this.display = true;
+      this.date = item.date;
+      this.category = item.category;
+      this.price = item.price;
+      this.id = item.id;
     }
+  },
+  computed: {
+    ...mapGetters([
+      'getEditItemId'
+    ])
   },
   methods: {
     save () {
-      const { date, category, price } = this;
-      const pays = this.getPaymentsList();
-      this.setPaymentsListData([{ date, category, price }, ...pays]);
-      this.date = this.category = '';
-      this.price = 0;
+      const { date, category, price, id } = this;
+      this.saveItem({ id, date, category, price });
+      this.display = false;
+      this.clear();
     },
     addcost () {
-      this.display = !this.display
+      this.display = !this.display;
+      this.clear();
+    },
+    clear() {
+      this.date = this.category = '';
+      this.price = 0;
+      this.id = 0;
     },
     processParameters() {
+      this.display = false;
       if (this.$route.params.category && this.$route.query.value) {
-        const p = { date: (new Date()).toLocaleDateString(), category: this.$route.params.category, price: this.$route.query.value };
-        const pays = this.getPaymentsList();
-        this.setPaymentsListData([p, ...pays]);
-      } else {
+        const p = { id: 0, date: (new Date()).toLocaleDateString(), category: this.$route.params.category, price: this.$route.query.value };
+        this.saveItem(p);
+      } else if (this.$route.params.category || this.$route.query.value) {
+        this.id = 0;
         this.display = true;
         this.date = (new Date()).toLocaleDateString();
         this.category = this.$route.params.category || '';
@@ -53,7 +77,8 @@ export default {
       }
     },
     ...mapMutations([
-      'setPaymentsListData'
+      'saveItem',
+      'editItem'
     ]),
     ...mapGetters([
       'getPaymentsList'

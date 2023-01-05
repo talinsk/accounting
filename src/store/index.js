@@ -3,13 +3,35 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
+const categories = ['Education', 'Travel', 'Food'];
+
 export default new Vuex.Store({
   state: {
-    paymentsList: []
+    paymentsList: [],
+    editItemId: null
   },
   mutations: {
     setPaymentsListData (state, payload) {
       state.paymentsList = payload
+    },
+    deleteItem (state, payload) {
+      state.paymentsList = state.paymentsList.filter(item => item.id !== payload)
+    },
+    editItem (state, payload) {
+      state.editItemId = payload
+    },
+    saveItem(state, payload) {
+      const itemIndex = state.paymentsList.findIndex(item => item.id === payload.id);
+      if (itemIndex < 0) {
+        if (state.paymentsList.length > 0) {
+          payload.id = state.paymentsList[state.paymentsList.length - 1].id + 1;
+        }
+        state.paymentsList.push(payload);
+      } else {
+        state.paymentsList[itemIndex] = payload;
+      }
+
+      state.paymentsList = [...state.paymentsList];
     }
   },
   getters: {
@@ -17,7 +39,8 @@ export default new Vuex.Store({
     getPaymentsListFullPrice: state => {
       return state.paymentsList
         .reduce((res, cur) => res + cur.price, 0)
-    }
+    },
+    getEditItemId: state => state.editItemId
   },
   actions: {
     fetchData ({ commit }) {
@@ -26,8 +49,9 @@ export default new Vuex.Store({
           const items = []
           for (let i = 1; i < 105; i++) {
             items.push({
+              id: i,
               date: '13.05.2021',
-              category: 'Education',
+              category: categories[Math.floor(Math.random() * 3)], // 'Education',
               price: Math.floor(Math.random() * 100)
             })
           }
